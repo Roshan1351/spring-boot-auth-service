@@ -70,7 +70,7 @@ public class AuthenticationService {
             return "Invalid otp code.";
         }
 
-        user User= userRepo.findByEmail(email);
+        user User= userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("user not found with email: "+ email));
         User.setEnable(true);
         userRepo.save(User);
         otpRepo.delete(Otp);
