@@ -14,11 +14,19 @@ public class emailService {
 
     @Async
     public void sendOtpToEmail(String email, int otp){
-        SimpleMailMessage messageSend= new SimpleMailMessage();
-        messageSend.setTo(email);
-        messageSend.setSubject("Your registration otp verificatin code");
-        messageSend.setText("welcome! verification otp code is: "+ otp);
+        try {
+            SimpleMailMessage messageSend = new SimpleMailMessage();
+            messageSend.setTo(email);
+            messageSend.setSubject("Your registration otp verificatin code");
+            messageSend.setText("welcome! verification otp code is: " + otp);
 
-        javaMailSender.send(messageSend);
+            javaMailSender.send(messageSend);
+            System.out.println("EMAIL SENT SUCCESSFULLY");
+        }catch(Exception e){
+            e.printStackTrace();
+
+            System.out.println(
+                    "EMAIL ERROR: " + e.getMessage());
+        }
     }
 }

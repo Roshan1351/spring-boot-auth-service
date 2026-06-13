@@ -1,6 +1,5 @@
 package com.Authentication.System.service;
 
-
 import com.Authentication.System.dto.userRequestDto;
 import com.Authentication.System.dto.userResponseDto;
 import com.Authentication.System.entity.otp;
@@ -30,12 +29,12 @@ public class AuthenticationService {
 
     private final BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
 
-    private String registerUser(userRequestDto request){
+    public String registerUser(userRequestDto request){
         if(userRepo.existsByUsername(request.getUsername())){
             return "username not available or already taken!";
         }
 
-        if(userRepo.existsBYEmail(request.getEmail())){
+        if(userRepo.existsByEmail(request.getEmail())){
             return "email is already registered";
         }
 
@@ -75,15 +74,14 @@ public class AuthenticationService {
         User.setEnable(true);
         userRepo.save(User);
         otpRepo.delete(Otp);
-        return "verification successful!... now you can able to log in";
+        return "verification successful! now you can able to log in";
     }
 
-    public userResponseDto loginUser(String username, String password){
-        user User= userRepo.findByUsername(username).orElseThrow(()->new RuntimeException("invalid username or password"));
+    public String loginUser(String username, String password){
+        user User= userRepo.findByUsername(username).orElseThrow(()->new RuntimeException("invalid username and password"));
 
         if(!User.getEnable()){
             throw new RuntimeException("please verify you account via Otp before login.");
-
         }
         if(!passwordEncoder.matches(password, User.getPassword())){
             throw new RuntimeException("invalid username or password");
@@ -92,6 +90,6 @@ public class AuthenticationService {
         userResponseDto response= new userResponseDto();
         response.setEmail(User.getEmail());
         response.setUsername(User.getUsername());
-        return response;
+        return "login successful!";
     }
 }
